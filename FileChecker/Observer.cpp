@@ -3,46 +3,40 @@
 
 Observer::Observer()
 {
-    connect(this, &Observer::notify, &Notifier::FileState);
+    connect(this, &Observer::fileChanged, &Notifier::FileChanged);
+    connect(this, &Observer::fileNotExist, &Notifier::FileDeleted);
+    connect(this, &Observer::fileExist, &Notifier::FileExist);
 }
 
 void Observer::addFile(UserFile *newFile)
 {
     files.push_back(newFile);
-    QString message;
     if(newFile->isExist())
-        message = "File " + newFile->path() + " is exist with size " + newFile->size() +" bytes "
-                + newFile->getLastTime().toString("hh:mm:ss dd.MM.yyyy") + " last modified time\n";
-    emit notify(message);
+        emit fileExist(newFile->path(), newFile->size());
+    else
+        emit fileNotExist(newFile->path());
 }
 
 void Observer::observe()
 {
-    QString message;
-    for(auto& file : files){
+    for(QVector<UserFile*>::iterator it = files.begin(); it != files.end(); it++){
+        auto file = *it;
         QFileInfo checkFile(file->path());
         if((file->isExist()) && (!checkFile.exists())){
             file->setExist(false);
-            file->setLastTime(QDateTime());
             file->setNewSize(0);
 
-            message = "File " + file->path() + " isn't exist\n";
-            emit notify(message);
+            emit fileNotExist(file->path());
         }
         else if((!file->isExist()) && (checkFile.exists())){
             file->setExist(true);
-            file->setLastTime(checkFile.lastModified());
             file->setNewSize(checkFile.size());
 
-            message = "File " + file->path() + " is exist with size " + file->size() +" bytes "
-                    + file->getLastTime().toString("hh:mm:ss dd.MM.yyyy") + " last modified time\n";
-            emit notify(message);
+            emit fileExist(file->path(), file->size());
         }
-        else if(checkFile.lastModified() != file->getLastTime()){
-            file->setLastTime(checkFile.lastModified());
-            message = "File " + file->path() + " is exist with size " + file->size() +" bytes and was changed "
-                    + file->getLastTime().toString("hh:mm:ss dd.MM.yyyy") + " last modified time\n";
-            emit notify(message);
+        else if(checkFile.size() != file->size()){
+            file->setNewSize(checkFile.size());
+            emit fileChanged(file->path(), file->size());
         }
     }
 }

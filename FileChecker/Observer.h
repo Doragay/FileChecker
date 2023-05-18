@@ -13,9 +13,10 @@ public:
     void addFile(UserFile *newFile);
     void observe();
     void deleteFile(QString &FileName);
-    bool changedFile(QFileInfo& file, UserFile& oldFile);
 signals:
-    void notify(QString &message);
+    void fileExist(const QString path, qint64 size);
+    void fileNotExist(const QString path);
+    void fileChanged(const QString path, qint64 size);
 };
 
 
