@@ -3,12 +3,12 @@
 UserFile::UserFile(const QString &filePath)
 {
     QFileInfo newFile(filePath);
-    if(newFile.exists()){
+    if(newFile.exists()){ //если файл существует, то обозначаем соответсвующие параметры
         exist = true;
         pathFile = newFile.filePath();
         sizeFile = newFile.size();
     }
-    else{
+    else{ //если отсутсвует, то обозначаем файл, как несуществующий
         exist = false;
         pathFile = filePath;
         sizeFile = 0;

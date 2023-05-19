@@ -13,6 +13,6 @@ void Notifier::FileExist(const QString path, qint64 size)
 
 void Notifier::FileDeleted(const QString path)
 {
-    std::cout << "file " << path.toStdString() << " was deleted" << std::endl;
+    std::cout << "file " << path.toStdString() << " is not exist " << std::endl;
 }
 

@@ -12,9 +12,13 @@ class UserFile
 public:
     UserFile() = default;
     UserFile(const QString &filePath);
+
+    //getters
     bool isExist();
     QString path();
     qint64 size();
+
+    //setters
     void setExist(const bool flag);
     void setNewSize(qint64 size);
 };

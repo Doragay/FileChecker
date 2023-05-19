@@ -6,7 +6,7 @@
 
 class Observer : public QObject  //наследуется от qo
 {
-    Q_OBJECT
+    Q_OBJECT //для сигналов и слотов
     QVector<UserFile*> files;
 public:
     Observer();
